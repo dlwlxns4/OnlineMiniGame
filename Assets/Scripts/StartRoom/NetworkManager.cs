@@ -90,8 +90,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         currentButton.GetComponent<Button>().interactable=false;
     }
 
-    void MyListRenewal()
-    {
+    void MyListRenewal(){
         // 최대페이지
         maxPage = (myList.Count % CellBtn.Length == 0) ? myList.Count / CellBtn.Length : myList.Count / CellBtn.Length + 1;
 
@@ -119,8 +118,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     //     MyListRenewal();
     // }
 
-    public override void OnRoomListUpdate(List<RoomInfo> roomList)
-    {
+    public override void OnRoomListUpdate(List<RoomInfo> roomList){
         int roomCount = roomList.Count;
         for (int i = 0; i < roomCount; i++)
         {
@@ -136,17 +134,15 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     #endregion
 
     #region 서버연결
-    void Awake() 
-    {
+    void Awake() {
         PhotonNetwork.SendRate = 60;
         PhotonNetwork.SerializationRate = 30;
         PhotonNetwork.AutomaticallySyncScene = true;
         DontDestroyOnLoad(gameObject);
     }
-    void Update()
-    {
+    void Update(){
         StatusText.text = PhotonNetwork.NetworkClientState.ToString();
-        LobbyInfoText.text = (PhotonNetwork.CountOfPlayers - PhotonNetwork.CountOfPlayersInRooms) + "로비 / " + PhotonNetwork.CountOfPlayers + "접속";
+        LobbyInfoText.text = PhotonNetwork.CountOfPlayers + "접속";
     }
 
     public void Connect() {
@@ -161,8 +157,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     } 
     public override void OnConnectedToMaster() => PhotonNetwork.JoinLobby();
 
-    public override void OnJoinedLobby()
-    {
+    public override void OnJoinedLobby(){
         LobbyPanel.SetActive(true);
         RoomPanel.SetActive(false);
         PhotonNetwork.LocalPlayer.NickName = NickNameInput.text;
@@ -175,8 +170,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
       PhotonNetwork.Disconnect();
         disconnectPanel.SetActive(true);
     } 
-    public override void OnDisconnected(DisconnectCause cause)
-    {
+    public override void OnDisconnected(DisconnectCause cause){
         LobbyPanel.SetActive(false);
         RoomPanel.SetActive(false);
     }
@@ -202,7 +196,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
             readyBtn.GetComponentInChildren<Text>().text =  "준비";
             PV.RPC("decrease_numRPC", RpcTarget.All);
         }
-
+        PV.RPC("decrease_numRPC", RpcTarget.All);
         PhotonNetwork.LeaveRoom();
 
         
@@ -212,8 +206,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         }
     }
     
-    public override void OnJoinedRoom()
-    {   
+    public override void OnJoinedRoom(){   
         
        
         RoomPanel.SetActive(true);
@@ -231,7 +224,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     //플레이리스트 리프레쉬 메소드
     void RefreshPlayerInRoom(){
         
-
+        ready_num=0;
         //플레이리스트 초기화
         for(int i=0; i<playerName.Length; i++){
             playerName[i].text = "";
@@ -253,31 +246,27 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinRandomFailed(short returnCode, string message) { RoomInput.text = ""; CreateRoom(); }
 
-    public override void OnPlayerEnteredRoom(Player newPlayer)
-    {
+    public override void OnPlayerEnteredRoom(Player newPlayer){
         RoomRenewal();
         RefreshPlayerInRoom();
         ChatRPC("<color=yellow>" + newPlayer.NickName + "님이 참가하셨습니다</color>");
     }
 
-    public override void OnPlayerLeftRoom(Player otherPlayer)
-    {
+    public override void OnPlayerLeftRoom(Player otherPlayer){
         RoomRenewal();
         RefreshPlayerInRoom();
         ChatRPC("<color=yellow>" + otherPlayer.NickName + "님이 퇴장하셨습니다</color>");
         
     }
 
-    void RoomRenewal()
-    {
+    void RoomRenewal(){
         RoomInfoText.text = PhotonNetwork.CurrentRoom.Name + " / " + PhotonNetwork.CurrentRoom.PlayerCount + "명 / " + PhotonNetwork.CurrentRoom.MaxPlayers + "최대";
     }
     #endregion
 
 
     #region 채팅
-    public void Send()
-    {
+    public void Send(){
         PV.RPC("ChatRPC", RpcTarget.All, PhotonNetwork.NickName + " : " + ChatInput.text);
         ChatInput.text = "";
     }
@@ -335,6 +324,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
                 {
                     
                     PhotonNetwork.CurrentRoom.IsVisible=false;
+
+
                     PV.RPC("SetActivePanel", RpcTarget.All);
                     
                     PV.RPC("HideBannerViewRPC", RpcTarget.AllBuffered);
@@ -345,28 +336,24 @@ public class NetworkManager : MonoBehaviourPunCallbacks
                         if(randomMap == 0)
                             PhotonNetwork.LoadLevel("Dodge_Cat");
                         else if(randomMap == 1)
-                            PhotonNetwork.LoadLevel("Patience");
-                        else if(randomMap == 2)
                             PhotonNetwork.LoadLevel("CanDrum");
-                        else if(randomMap == 3)
+                        else if(randomMap == 2)
                             PhotonNetwork.LoadLevel("GunFight");
-                        else if(randomMap == 4)
+                        else if(randomMap == 3)
                             PhotonNetwork.LoadLevel("NumberNumber");
-                        else if(randomMap == 5)
+                        else if(randomMap == 4)
                             PhotonNetwork.LoadLevel("ClickClick");
 
 
                     }else if(mapNum == 1)
                         PhotonNetwork.LoadLevel("Dodge_Cat");
                     else if(mapNum == 2)
-                        PhotonNetwork.LoadLevel("Patience");
-                    else if(mapNum == 3)
                         PhotonNetwork.LoadLevel("CanDrum");
-                    else if(mapNum == 4)
+                    else if(mapNum == 3)
                         PhotonNetwork.LoadLevel("GunFight");
-                    else if(mapNum == 5)
+                    else if(mapNum == 4)
                         PhotonNetwork.LoadLevel("NumberNumber");
-                    else if(mapNum == 6)
+                    else if(mapNum == 5)
                         PhotonNetwork.LoadLevel("ClickClick");
                 }
             }
@@ -384,7 +371,6 @@ void HideBannerViewRPC(){
 
 void LoadArena()
 {
-
     if (!PhotonNetwork.IsMasterClient)
     {
         Debug.LogError("PhotonNetwork : Trying to Load a level but we are not the master Client");
@@ -514,8 +500,31 @@ void LoadArena()
     #endregion
 
     #region 초기화
+
+
+    public void initRPC(){
+        
+        if(PhotonNetwork.IsMasterClient){
+            PV.RPC("init", RpcTarget.AllBuffered);
+        }
+    }
+    
+    void SetStartBtn(){
+        if(!PhotonNetwork.IsMasterClient)
+            readyBtn.GetComponentInChildren<Text>().text ="준비";
+        else
+            readyBtn.GetComponentInChildren<Text>().text ="게임 시작";
+       
+    }
+
+
+    [PunRPC]
+
     public void init(){
-        ready_num=0;
+            ready_num=0;
+            RefreshPlayerInRoom();
+            SetStartBtn();
+        
     }
     #endregion
 }

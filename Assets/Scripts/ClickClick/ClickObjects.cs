@@ -32,11 +32,12 @@ public class ClickObjects : MonoBehaviourPunCallbacks
     }
 
     public void ReturnRoom(){
-        
-        SceneManager.LoadScene("InitRoom");
-
         Time.timeScale = 1;
         
+        
+        PhotonNetwork.OpRemoveCompleteCache();
+        SceneManager.LoadScene("InitRoom");
+
         RoomPanel.SetActive(true);
         if(PhotonNetwork.IsMasterClient)
             PhotonNetwork.CurrentRoom.IsVisible=true;

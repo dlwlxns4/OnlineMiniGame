@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
-using Photon.Realtime;
 using UnityEngine.SceneManagement;
+using GoogleMobileAds.Api;
 
 public class GameManager_NumberNumber : MonoBehaviourPunCallbacks
 {
@@ -38,14 +38,17 @@ public class GameManager_NumberNumber : MonoBehaviourPunCallbacks
     
     PlayerRank[] playerRanks;
     GameObject RoomPanel;
-
+    GameObject adManager;
+    float end;
 
     // Start is called before the first frame update
     void Start()
     {
+        adManager = GameObject.Find("AdManager");
         RoomPanel = GameObject.Find("Canvas").transform.Find("RoomPanel").gameObject;
         player = PhotonNetwork.Instantiate("Player_NumberNumber", Vector3.zero, Quaternion.identity);
         CreateNumber();
+        end = Time.realtimeSinceStartup+3.1f;
         StartCoroutine("SetState");
         score = player.GetComponent<Player_NumberNumber>().score;
         scoreText.text = score.ToString();
@@ -66,7 +69,9 @@ public class GameManager_NumberNumber : MonoBehaviourPunCallbacks
             if(endTime-Time.realtimeSinceStartup <=0){
                 timeText.text = 0.ToString();
                 state = State.Finish;
-                setRank();
+                Time.timeScale=0;
+                SetRank();
+                
             }
         }
     }
@@ -133,36 +138,32 @@ public class GameManager_NumberNumber : MonoBehaviourPunCallbacks
         return ar;
 
     }
+
     IEnumerator SetState(){
-        
         if( state == State.Done){
             StopCoroutine("SetState");
         }else if( state == State.Start){
-            startText.text = 3.ToString();
-            yield return new WaitForSeconds(1f);
-            startText.text = 2.ToString();
-            yield return new WaitForSeconds(1f);
-            startText.text = 1.ToString();
-            yield return new WaitForSeconds(1f);
-            startText.gameObject.SetActive(false);
             
-            
+            while(end-Time.realtimeSinceStartup >=0){
+            startText.text = (end-Time.realtimeSinceStartup).ToString("N0");
+            yield return new WaitForSeconds(0.05f);
+            }
+
             state = State.Done;
             startTime = Time.realtimeSinceStartup;
+            startText.gameObject.SetActive(false);
             
-            endTime = startTime + 30;
+            endTime = startTime + 15;
             
         }
     
     }   
 
 
-    void setRank(){
+    void SetRank(){
         GameObject[] allPlayer;
         allPlayer = GameObject.FindGameObjectsWithTag("GameManager_NumberNumber");
-        Debug.Log(allPlayer.Length);
         playerRanks = new PlayerRank[PhotonNetwork.PlayerList.Length];
-        Debug.Log(playerRanks.Length);
         //구조체에 정보담기
         for(int i=0; i<PhotonNetwork.PlayerList.Length; i++){
             playerRanks[i].nickName = allPlayer[i].GetComponent<PhotonView>().Owner.NickName;
@@ -191,8 +192,12 @@ public class GameManager_NumberNumber : MonoBehaviourPunCallbacks
     }
 
     public void ReturnRoom(){
-        SceneManager.LoadScene("InitRoom");
         Time.timeScale = 1;
+        SceneManager.LoadScene("InitRoom");
+        adManager.GetComponent<AdmobManager>().ShowBannderAd();
+
+
+
         RoomPanel.SetActive(true);
         if(PhotonNetwork.IsMasterClient)
             PhotonNetwork.CurrentRoom.IsVisible=true;

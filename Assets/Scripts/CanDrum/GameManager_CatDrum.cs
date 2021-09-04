@@ -139,10 +139,11 @@ public class GameManager_CatDrum : MonoBehaviourPunCallbacks
     }
 
     public void ReturnRoom(){
-        
+        Time.timeScale = 1;
+
+
         SceneManager.LoadScene("InitRoom");
 
-        Time.timeScale = 1;
         
         RoomPanel.SetActive(true);
         if(PhotonNetwork.IsMasterClient)

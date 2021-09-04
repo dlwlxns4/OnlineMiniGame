@@ -43,7 +43,7 @@ struct PlayerRank{
 
 
         gameManager.startTime = Time.realtimeSinceStartup;
-        gameManager.endTime = gameManager.startTime + 33;
+        gameManager.endTime = gameManager.startTime + 18;
 
         StartCoroutine("SetState");
     }

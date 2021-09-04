@@ -23,6 +23,10 @@ public class Move_Patience : MonoBehaviourPunCallbacks
     bool isGround ;
 
 
+    float startTime;
+    float startPlayTime;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,6 +39,7 @@ public class Move_Patience : MonoBehaviourPunCallbacks
         startText = GameObject.Find("StartText").GetComponent<Text>();
 
         StartCoroutine("SetState");       
+        
     }
 
     // Update is called once per frame
@@ -57,6 +62,8 @@ public class Move_Patience : MonoBehaviourPunCallbacks
             if (Input.GetKey(KeyCode.Space)){
                 Jump();
             } 
+        }else{
+            rigidbody2D.velocity=  Vector2.zero;
         }
         //땅인지 체크
         isGround = Physics2D.OverlapCircle((Vector2)transform.position + new Vector2(-0.4f, 0), 0.07f, 1<< LayerMask.NameToLayer("Ground"));
@@ -72,18 +79,20 @@ public class Move_Patience : MonoBehaviourPunCallbacks
 
 
     IEnumerator SetState(){
+        startTime = Time.realtimeSinceStartup;
+        startPlayTime = startTime+3.1f;
+
         if(photonView.IsMine){
             if( state == State.Done){
                 StopCoroutine("SetState");
             }else if( state == State.Start){
-                startText.text = 3.ToString();
-                yield return new WaitForSeconds(1f);
-                startText.text = 2.ToString();
-                yield return new WaitForSeconds(1f);
-                startText.text = 1.ToString();
-                yield return new WaitForSeconds(1f);
+
+                while((startPlayTime-Time.realtimeSinceStartup) >0){
+                    startText.text = (startPlayTime-Time.realtimeSinceStartup).ToString("N0");
+
+                    yield return new WaitForSeconds(0.1f);
+                }
                 startText.gameObject.SetActive(false);
-                
                 
                 state = State.Done;
                 

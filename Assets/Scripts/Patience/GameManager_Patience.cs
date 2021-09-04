@@ -28,7 +28,7 @@ public class GameManager_Patience : MonoBehaviourPunCallbacks
 
     public void setRank(string nickName, bool goal){
         if(goal)
-            ranks[playerNum++].text = nickName;
+            ranks[playerNum++].text = playerNum + ": " + nickName;
         else
             ranks[playerNum++].text = "Retire" + "       " + nickName;
     }
@@ -36,12 +36,13 @@ public class GameManager_Patience : MonoBehaviourPunCallbacks
 
     //버튼클릭 시 방 돌아가기
     public void ReturnRoom(){
+        Time.timeScale = 1;
+        
         RoomPanel.SetActive(true);
 
-    
+
         adManager.GetComponent<AdmobManager>().ShowBannderAd();
 
-        Time.timeScale = 1;
         SceneManager.LoadScene("InitRoom");
         PhotonNetwork.CurrentRoom.IsVisible=true;
     }

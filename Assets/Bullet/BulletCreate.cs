@@ -31,6 +31,7 @@ public class BulletCreate : MonoBehaviourPun
     // Start is called before the first frame update
     void Start()
     {
+        
         //Initialized Bullet Create Position
         limitMin[0] = new Vector2(-5,-4);
         limitMax[0] = new Vector2(-5,4);
@@ -82,16 +83,17 @@ public class BulletCreate : MonoBehaviourPun
                 int createType = Random.Range(1,5);
                 if(createType==1){
                     Vector2 startBullet = new Vector2(-5, Random.Range(-4f, 4f));
-                    PhotonNetwork.Instantiate("Bullet", startBullet, Quaternion.identity);
+                    PhotonNetwork.InstantiateRoomObject("Bullet", startBullet, Quaternion.identity);
                 }else if(createType == 2){
                     Vector2 startBullet = new Vector2(5, Random.Range(-4f, 4f));
-                    PhotonNetwork.Instantiate("Bullet", startBullet, Quaternion.identity);
+                    PhotonNetwork.InstantiateRoomObject("Bullet", startBullet, Quaternion.identity);
                 }else if(createType == 3){
                     Vector2 startBullet = new Vector2(Random.Range(-5f, 5f), 4f);
-                    PhotonNetwork.Instantiate("Bullet", startBullet, Quaternion.identity);
+                    PhotonNetwork.InstantiateRoomObject("Bullet", startBullet, Quaternion.identity);
                 }else if(createType == 4){
                     Vector2 startBullet = new Vector2(Random.Range(-5f, 5f), -4f);
-                    PhotonNetwork.Instantiate("Bullet", startBullet, Quaternion.identity);
+                    PhotonNetwork.InstantiateRoomObject("Bullet", startBullet, Quaternion.identity);
+                    
                 }
 
                 totalBullet ++;

@@ -38,7 +38,7 @@ public class Move_Dodge : MonoBehaviourPunCallbacks
         Time.timeScale=0;
         transform = GetComponent<Transform>();
         gameManager = GameObject.Find("GameManager");
-        rankPanel = gameManager.GetComponent<End_DodgeCat>().rankPanel;
+        rankPanel = gameManager.GetComponent<GameManager_DodgeCat>().rankPanel;
         startText = GameObject.Find("StartText").GetComponent<Text>();
         
         if(PhotonNetwork.IsMasterClient)
@@ -74,27 +74,6 @@ public class Move_Dodge : MonoBehaviourPunCallbacks
         StartCoroutine("SetStart");
     }
 
-    // IEnumerator SetState(){
-    //     if(photonView.IsMine){
-    //         if( state == State.None){
-    //             StopCoroutine("SetState");
-    //         }else if( state == State.Start){
-                
-    //             startText.text = 3.ToString();
-    //             yield return new WaitForSeconds(1f);
-    //             startText.text = 2.ToString();
-    //             yield return new WaitForSeconds(1f);
-    //             startText.text = 1.ToString();
-    //             yield return new WaitForSeconds(1f);
-    //             startText.gameObject.SetActive(false);
-                
-    //             Time.timeScale = 1;
-    //             state = State.None;
-                
-    //         }
-    //     }
-    // }
-
     
     float startTime;
     float endTimeState;
@@ -124,21 +103,21 @@ public class Move_Dodge : MonoBehaviourPunCallbacks
     [PunRPC]
     void DamagedPlayerRPC(){
         isSurvived = 0 ;
-        gameManager.GetComponent<End_DodgeCat>().survived--;
+        gameManager.GetComponent<GameManager_DodgeCat>().survived--;
         this.GetComponentInChildren<SpriteRenderer>().sprite = sprite;
         
         //순위 저장
         setRankRPC();
         
 
-        gameManager.GetComponent<End_DodgeCat>().SetPlayer(playerRank);
+        gameManager.GetComponent<GameManager_DodgeCat>().SetPlayer(playerRank);
 
-        if( gameManager.GetComponent<End_DodgeCat>().survived == 0){
+        if( gameManager.GetComponent<GameManager_DodgeCat>().survived == 0){
             Time.timeScale = 0 ;
             rankPanel.SetActive(true); //랭크판 표시
 
             //순위 업데이트후 표시
-            gameManager.GetComponent<End_DodgeCat>().UpdateRankPanel();
+            gameManager.GetComponent<GameManager_DodgeCat>().UpdateRankPanel();
 
         }       
     }

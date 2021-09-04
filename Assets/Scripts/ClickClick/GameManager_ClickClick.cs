@@ -130,7 +130,7 @@ public class GameManager_ClickClick : MonoBehaviourPunCallbacks, IPunObservable
 
     }
     IEnumerator delayTime(){
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.5f);
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

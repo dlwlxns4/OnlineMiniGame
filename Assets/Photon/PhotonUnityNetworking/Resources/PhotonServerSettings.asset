@@ -65,6 +65,8 @@ MonoBehaviour:
   - SetTurnTextRPC
   - DeleteChuruRPC
   - HideBannerViewRPC
+  - init
+  - UpdatePlayerNumRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

@@ -52,7 +52,7 @@ public class Destination : MonoBehaviourPunCallbacks
                 timer.text = time.ToString("N1");
             }
             if(time == 0){
-                retiredPlayer();
+                // retiredPlayer();
 
                 rankPanel.SetActive(true);
                 StopCoroutine("SetTimer");

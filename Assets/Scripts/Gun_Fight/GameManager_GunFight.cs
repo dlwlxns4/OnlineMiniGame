@@ -46,6 +46,7 @@ public class GameManager_GunFight : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Awake()
     {
+        adManager = GameObject.Find("AdManager");
         CreatePlayer();
         StartCoroutine("StartGame");
         
@@ -79,7 +80,7 @@ public class GameManager_GunFight : MonoBehaviourPunCallbacks
             }
         }
 
-        endTime = Time.realtimeSinceStartup + 60;
+        endTime = Time.realtimeSinceStartup + 30;
         StartCoroutine("SetTimer");
 
     }
@@ -153,11 +154,11 @@ public class GameManager_GunFight : MonoBehaviourPunCallbacks
     }
 
     public void ReturnRoom(){
+        Time.timeScale = 1;
         SceneManager.LoadScene("InitRoom");
         
         adManager.GetComponent<AdmobManager>().ShowBannderAd();
         
-        Time.timeScale = 1;
 
         RoomPanel.SetActive(true);
         if(PhotonNetwork.IsMasterClient)
